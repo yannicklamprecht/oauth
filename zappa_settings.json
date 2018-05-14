@@ -1,0 +1,19 @@
+{
+  "dev": {
+    "project_name": "oauth",
+    "keep_warm": false,
+    "debug": true,
+    "log_level": "DEBUG",
+    "aws_region": "eu-central-1",
+    "s3_bucket": "zappa-d8e9e0d0s-dev-eu-central-1",
+    "app_function": "oauth.src.server.app",
+    "http_methods": [
+      "GET",
+      "POST"
+    ],
+    "parameter_depth": 1,
+    "timeout_seconds": 300,
+    "memory_size": 128,
+    "use_precompiled_packages": true
+  }
+}
