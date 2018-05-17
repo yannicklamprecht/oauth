@@ -1,7 +1,8 @@
+import json
 import urllib.parse
 
 import requests
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, Response
 
 from oauth.src.static import CLIENT_ID, CLIENT_SECRET
 from oauth.src.utils import append_params_to_uri
@@ -17,26 +18,28 @@ def oauthcallback():
 
 @app.route("/callback")
 def callback():
-    authorization_key: str = "code"  # request.args['code']
-    data = urllib.parse.quote({
-        'Code': authorization_key,
-        'Client_id': CLIENT_ID,
-        'Client_secret': CLIENT_SECRET,
-        'Redirect_uri': "https://o8tluz7hga.execute-api.eu-central-1.amazonaws.com/dev/oauthcallback",
-        'Grant_type': "authorization_code",
+    authorization_key: str = request.args['code']
+    data = urllib.parse.urlencode({
+        'code': authorization_key,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'redirect_uri': "https://qcnawwa4ej.execute-api.eu-central-1.amazonaws.com/dev/oauthcallback",
+        'grant_type': "authorization_code",
     })
 
-    request.headers["Content-Type"] = "application/x-www-form-urlencoded"
-    requests.post(
+    token_result: Response = requests.post(
         "https://accounts.google.com/o/oauth2/token",
-        data=data
+        data=data,
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
     )
+
+    # return token_result.json()
 
 
 @app.route("/authenticate")
 def authenticate():
     uri = append_params_to_uri("https://accounts.google.com/o/oauth2/auth", {
-        'redirect_uri': 'https://o8tluz7hga.execute-api.eu-central-1.amazonaws.com/dev/callback',
+        'redirect_uri': 'https://qcnawwa4ej.execute-api.eu-central-1.amazonaws.com/dev/callback',
         'response_type': 'code',
         'client_id': CLIENT_ID,
         'scope': 'https://mail.google.com/',

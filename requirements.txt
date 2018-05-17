@@ -1,3 +1,2 @@
-google-api-python-client
 flask
 zappa>=0.45.1
